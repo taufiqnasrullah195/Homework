@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Form Registrasi</h2>
+    <form id="registration-form">
+      <label for="name">Nama:</label>
+      <input type="text" id="name" min="10" required>
+      <br><br>
+      <label for="age">Umur:</label>
+      <input type="number" id="age" min="25" required>
+      <br><br>
+      <label for="balance">Uang Sangu:</label>
+      <input type="number" id="balance" min="100000" required>
+      <br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <br><br>
+    <h2>List Pendaftar</h2>
+    <table id="registration-table">
+      <tr>
+        <th>Nama</th>
+        <th>Umur</th>
+        <th>Uang Sangu</th>
+      </tr>
+    </table>
+    <br><br>
+    <p id="resume"></p>
+  </body>
+  <script>
+    const form = document.querySelector("#registration-form");
+    const table = document.querySelector("#registration-table");
+    const resume = document.querySelector("#resume");
+    
+    class Registrant {
+      constructor(name, age, balance) {
+        this.name = name;
+        this.age = age;
+        this.balance = balance;
+      }
+    }
+    
+    let registrants = [];
+    
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const name = document.querySelector("#name").value;
+      const age = parseInt(document.querySelector("#age").value);
+      const balance = parseInt(document.querySelector("#balance").value);
+      const registrant = new Registrant(name, age, balance);
+      registrants.push(registrant);
+      renderTable();
+      calculateResume();
+    });
+    
+    function renderTable() {
+      table.innerHTML = `
+        <tr>
+          <th>Nama</th>
+          <th>Umur</th>
+          <th>Uang Sangu</th>
+        </tr>
+      `;
+      registrants.forEach(registrant => {
+        const row = `
+          <tr>
+            <td>${registrant.name}
+            </td>
+            <td>${registrant.age}</td>
+            <td>${registrant.balance}</td>
+          </tr>
+        `;
+        table.innerHTML += row;
+      });
+    }
+    async function calculateResume() {
+  let totalAge = 0;
+  let totalBalance = 0;
+  for (const registrant of registrants) {
+    totalAge += registrant.age;
+    totalBalance += registrant.balance;
+  }
+  const averageAge = totalAge / registrants.length;
+  const averageBalance = totalBalance / registrants.length;
+  resume.innerHTML = `Rata-rata pendaftar memiliki uang sangu sebesar ${averageBalance} dengan rata-rata umur ${averageAge}`;
+}
+</script>
+</html>
